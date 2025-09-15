@@ -14,9 +14,11 @@
     download_dir: "/tmp/awx_bundle"
     receptor_dir: "/etc/receptor"
 
-    # Variabili personalizzabili
-    awx_instance_hostname: ""
+    # AWX Instance Group
     awx_instance_group_name: ""
+
+    # AWX Instance
+    awx_instance_hostname: ""
     awx_instance_listener_port: 27199
     awx_instance_enabled: true
     awx_instance_managed_by_policy: true
@@ -245,4 +247,5 @@
     - name: Clean up temporary AWX bundle directory
       ansible.builtin.file:
         path: "{{ download_dir }}"
+
         state: absent
