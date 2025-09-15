@@ -32,7 +32,7 @@ This playbook fully automates Receptor node deployment:
 # Required configuration
 awx_api_host: "your-awx-server.com"
 awx_token: "your-awx-api-token"
-awx_instance_hostname: "receptor-node-01"
+awx_instance_hostname: "receptor-node-01" or "192.168.1.1"
 awx_instance_group_name: "production-nodes"
 ```
 
@@ -51,7 +51,7 @@ ansible-playbook -i inventory install_Bundle_Receptor.yml
 | `awx_api_host` | Your AWX server hostname (used to build API URL) | ✅ | — |
 | `awx_token` | AWX API token with admin privileges | ✅ | — |
 | `download_dir` | Temporary path for storing the install bundle | ❌ | `/tmp/awx_bundle` |
-| `dest_dir` | Destination directory for receptor configuration and certificates | ❌ | `/etc/receptor` |
+| `receptor_dir` | Destination directory for receptor configuration and certificates | ❌ | `/etc/receptor` |
 | `awx_instance_hostname` | DNS Name or IP for this receptor node | ✅ |  |
 | `awx_instance_group_name` | Name of the AWX instance group to create/join | ✅ | |
 | `awx_instance_peers_listener_port` | TCP port where receptor listens | ❌ | `27199` |
