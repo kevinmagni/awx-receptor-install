@@ -1,4 +1,4 @@
-# AWX Receptor Auto-Installer
+# How to Install and Connect AWX Receptor to AWX
 
 [![Ansible](https://img.shields.io/badge/Ansible-EE0000?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)
 [![AWX](https://img.shields.io/badge/AWX-EE0000?style=for-the-badge&logo=ansible&logoColor=white)](https://github.com/ansible/awx)
