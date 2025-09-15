@@ -63,8 +63,10 @@ ansible-playbook -i inventory install_Bundle_Receptor.yml
 ## Prerequisites
 
 - Ubuntu/RHEL/CentOS system with sudo access
-- Network access to your AWX server
-- Valid AWX API token
+- Network connectivity requirements:
+  - **AWX Server** → **Receptor Node** on TCP port `27199`
+  - **Receptor Node** → **AWX Server** on TCP port `443` (HTTPS API)
+- Valid AWX API token with **Write** permissions
 
 ## Usage Example
 
@@ -92,14 +94,25 @@ sudo systemctl status receptor
 sudo journalctl -u receptor -f
 ```
 
-**Verify connectivity:**
-```bash
-# Test AWX API
-curl -k https://your-awx-host/api/v2/ping/
+# 🔗 Verify AWX-Receptor Connectivity
 
-# Test receptor port
+## Test 1: Receptor → AWX API
+**From Receptor Node:**
+```bash
+curl -k https://your-awx-host/api/v2/ping/
+```
+
+## Test 2: AWX → Receptor Port
+**From AWX Server:**
+```bash
 telnet your-receptor-node 27199
 ```
+
+---
+
+**Replace:**
+- `your-awx-host` → AWX server IP/hostname
+- `your-receptor-node` → Receptor node IP/hostname
 
 **Common issues:**
 - Ensure AWX token has admin privileges
