@@ -123,8 +123,8 @@ telnet your-receptor-node 27199
 ## Architecture
 
 ```
-AWX Control Plane ←→ Receptor Node ←→ Target Systems
+AWX Control Plane → Receptor Node → Target Systems
     (Port 443)        (Port 27199)      (Various)
 ```
 
-After installation, your Receptor node will appear in AWX under **Administration > Instance Groups** and be ready to execute jobs.
+After installation, your Receptor node will appear in AWX under **Administration > Instances** and be ready to execute jobs.
