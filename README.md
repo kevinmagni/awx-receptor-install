@@ -40,7 +40,7 @@ awx_instance_group_name: "production-nodes"
 ### 2. Run the Playbook
 
 ```bash
-ansible-playbook -i inventory install_Bundle_Receptor.yml
+ansible-playbook -i inventory Install_AWX_Receptor.yaml
 ```
 
 ## Configuration Variables
