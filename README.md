@@ -84,7 +84,7 @@ awx_token=your-secure-token
 ```
 
 ```bash
-ansible-playbook -i inventory install_Bundle_Receptor.yml
+ansible-playbook -i inventory Install_AWX_Receptor.yaml
 ```
 
 ## Troubleshooting
