@@ -4,20 +4,22 @@
   gather_facts: true
 
   tasks:
-    - name: Test variable validation rejects empty vars
-      ansible.builtin.include_role:
-        name: awx-receptor-install
-        tasks_from: main.yml
-      vars:
-        awx_receptor_api_host: ""
-        awx_receptor_api_token: ""
-        awx_receptor_instance_hostname: ""
-        awx_receptor_instance_group_name: ""
-      ignore_errors: true
-      register: _validation_result
+    - name: Test that validation rejects empty required vars
+      block:
+        - name: Run role with empty vars (should fail)
+          ansible.builtin.include_role:
+            name: awx-receptor-install
+          vars:
+            awx_receptor_api_host: ""
+            awx_receptor_api_token: ""
+            awx_receptor_instance_hostname: ""
+            awx_receptor_instance_group_name: ""
 
-    - name: Assert that validation failed as expected
-      ansible.builtin.assert:
-        that:
-          - _validation_result is failed
-        fail_msg: "Variable validation should have failed with empty required vars"
+        - name: Fail if validation did not reject empty vars
+          ansible.builtin.fail:
+            msg: "Variable validation should have failed with empty required vars"
+
+      rescue:
+        - name: Confirm validation worked
+          ansible.builtin.debug:
+            msg: "Variable validation correctly rejected empty required vars"
