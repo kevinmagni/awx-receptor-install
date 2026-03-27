@@ -4,6 +4,7 @@ extends: default
 ignore:
   - .github/
   - .venv/
+  - playbook/
 
 rules:
   line-length:
