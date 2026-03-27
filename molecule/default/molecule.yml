@@ -17,6 +17,8 @@ platforms:
 
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:${ANSIBLE_ROLES_PATH}"
   inventory:
     host_vars:
       receptor-ubuntu:
