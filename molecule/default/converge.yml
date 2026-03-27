@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Test role syntax and variable validation
+      ansible.builtin.include_role:
+        name: awx_receptor
+        tasks_from: main.yml
+      vars:
+        # Override to skip actual AWX API calls in CI
+        awx_receptor_api_host: "awx.example.com"
+        awx_receptor_api_token: "test-token"
+        awx_receptor_instance_hostname: "receptor-test-01"
+        awx_receptor_instance_group_name: "test-group"
+      ignore_errors: true

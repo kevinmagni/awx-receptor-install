@@ -1,0 +1,42 @@
+---
+- node:
+    id: {{ awx_receptor_instance_hostname }}
+
+- log-level: {{ awx_receptor_log_level }}
+
+- control-service:
+    service: control
+    filename: /tmp/receptor.sock
+    permissions: "0660"
+    tls: tls_server
+
+- tls-server:
+    name: tls_server
+    cert: {{ awx_receptor_dir }}/certs/receptor.crt
+    key: {{ awx_receptor_dir }}/certs/receptor.key
+    clientcas: {{ awx_receptor_dir }}/ca/ca.crt
+    skipreceptornamescheck: true
+    requireclientcert: true
+    mintls13: true
+
+- tls-client:
+    name: tls_client
+    cert: {{ awx_receptor_dir }}/certs/receptor.crt
+    key: {{ awx_receptor_dir }}/certs/receptor.key
+    rootcas: {{ awx_receptor_dir }}/ca/ca.crt
+    skipreceptornamescheck: true
+    mintls13: true
+
+- tcp-listener:
+    port: {{ awx_receptor_instance_listener_port }}
+    tls: tls_server
+
+- work-command:
+    worktype: ansible-runner
+    command: ansible-runner
+    params: worker
+    allowruntimeparams: true
+    verifysignature: true
+
+- work-verification:
+    publickey: {{ awx_receptor_dir }}/public_key/work_public_key.pem

@@ -1,0 +1,28 @@
+---
+# AWX API connection
+awx_receptor_api_host: ""
+awx_receptor_api_token: ""
+awx_receptor_validate_certs: false
+
+# AWX instance configuration
+awx_receptor_instance_hostname: ""
+awx_receptor_instance_listener_port: 27199
+awx_receptor_instance_enabled: true
+awx_receptor_instance_managed_by_policy: true
+awx_receptor_instance_peers_from_control_nodes: true
+
+# AWX instance group
+awx_receptor_instance_group_name: ""
+
+# Receptor paths
+awx_receptor_dir: "/etc/receptor"
+awx_receptor_download_dir: "/tmp/awx_bundle"
+
+# Receptor service log level
+awx_receptor_log_level: "debug"
+
+# Extra packages to install alongside receptor
+awx_receptor_extra_packages: []
+
+# Whether to clean up the downloaded bundle after installation
+awx_receptor_cleanup_bundle: true

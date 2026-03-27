@@ -1,0 +1,35 @@
+---
+galaxy_info:
+  author: Kevin Magni
+  description: Install and configure AWX Receptor execution nodes with automated AWX API registration
+  license: MIT
+  min_ansible_version: "2.14"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+
+  galaxy_tags:
+    - awx
+    - receptor
+    - ansible
+    - automation
+    - execution
+    - tower
+    - aap
+
+  role_name: awx_receptor
+  namespace: kevinmagni
+
+dependencies: []

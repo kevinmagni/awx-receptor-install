@@ -1,0 +1,87 @@
+---
+- name: Create execution instance in AWX
+  ansible.builtin.uri:
+    url: "{{ _awx_receptor_api_url }}/instances/"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ awx_receptor_api_token }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      hostname: "{{ awx_receptor_instance_hostname }}"
+      node_type: execution
+      listener_port: "{{ awx_receptor_instance_listener_port }}"
+      enabled: "{{ awx_receptor_instance_enabled }}"
+      managed_by_policy: "{{ awx_receptor_instance_managed_by_policy }}"
+      peers_from_control_nodes: "{{ awx_receptor_instance_peers_from_control_nodes }}"
+    validate_certs: "{{ awx_receptor_validate_certs }}"
+    status_code:
+      - 200
+      - 201
+  register: _awx_receptor_create_instance
+
+- name: Retrieve instances list from AWX
+  ansible.builtin.uri:
+    url: "{{ _awx_receptor_api_url }}/instances/"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ awx_receptor_api_token }}"
+    validate_certs: "{{ awx_receptor_validate_certs }}"
+  register: _awx_receptor_instances_list
+
+- name: Set instance_id fact
+  ansible.builtin.set_fact:
+    _awx_receptor_instance_id: >-
+      {{ _awx_receptor_instances_list.json.results
+         | selectattr('hostname', 'equalto', awx_receptor_instance_hostname)
+         | map(attribute='id')
+         | first }}
+
+- name: Create instance group in AWX
+  ansible.builtin.uri:
+    url: "{{ _awx_receptor_api_url }}/instance_groups/"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ awx_receptor_api_token }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      name: "{{ awx_receptor_instance_group_name }}"
+    validate_certs: "{{ awx_receptor_validate_certs }}"
+    status_code:
+      - 200
+      - 201
+  register: _awx_receptor_create_group
+
+- name: Retrieve instance groups list from AWX
+  ansible.builtin.uri:
+    url: "{{ _awx_receptor_api_url }}/instance_groups/"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ awx_receptor_api_token }}"
+    validate_certs: "{{ awx_receptor_validate_certs }}"
+  register: _awx_receptor_groups_list
+
+- name: Set instance_group_id fact
+  ansible.builtin.set_fact:
+    _awx_receptor_group_id: >-
+      {{ _awx_receptor_groups_list.json.results
+         | selectattr('name', 'equalto', awx_receptor_instance_group_name)
+         | map(attribute='id')
+         | first }}
+
+- name: Associate instance to instance group
+  ansible.builtin.uri:
+    url: "{{ _awx_receptor_api_url }}/instance_groups/{{ _awx_receptor_group_id }}/instances/"
+    method: POST
+    headers:
+      Authorization: "Bearer {{ awx_receptor_api_token }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      id: "{{ _awx_receptor_instance_id | int }}"
+    validate_certs: "{{ awx_receptor_validate_certs }}"
+    status_code:
+      - 200
+      - 201
+      - 204

@@ -1,0 +1,23 @@
+---
+_awx_receptor_api_url: "https://{{ awx_receptor_api_host }}/api/v2"
+_awx_receptor_bundle_subdir: "{{ awx_receptor_instance_hostname }}_install_bundle"
+
+_awx_receptor_packages_debian:
+  - podman
+  - receptor
+  - python3-ansible-runner
+  - tar
+  - gzip
+  - bzip2
+  - xz-utils
+  - unzip
+
+_awx_receptor_packages_redhat:
+  - podman
+  - receptor
+  - python3-ansible-runner
+  - tar
+  - gzip
+  - bzip2
+  - xz
+  - unzip

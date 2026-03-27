@@ -1,0 +1,47 @@
+---
+- name: Ensure receptor directories exist
+  ansible.builtin.file:
+    path: "{{ awx_receptor_dir }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - certs
+    - ca
+    - public_key
+
+- name: Deploy receptor.conf from template
+  ansible.builtin.template:
+    src: receptor.conf.j2
+    dest: "{{ awx_receptor_dir }}/receptor.conf"
+    mode: "0644"
+  notify: Restart receptor
+
+- name: Copy TLS certificates
+  ansible.builtin.copy:
+    src: "{{ awx_receptor_download_dir }}/{{ _awx_receptor_bundle_subdir }}/receptor/tls/{{ item.src }}"
+    dest: "{{ awx_receptor_dir }}/{{ item.dest }}"
+    remote_src: true
+    mode: "0600"
+  loop:
+    - { src: "receptor.crt", dest: "certs/receptor.crt" }
+    - { src: "receptor.key", dest: "certs/receptor.key" }
+    - { src: "ca/mesh-CA.crt", dest: "ca/ca.crt" }
+  notify: Restart receptor
+
+- name: Copy work public key
+  ansible.builtin.copy:
+    src: "{{ awx_receptor_download_dir }}/{{ _awx_receptor_bundle_subdir }}/receptor/work_public_key.pem"
+    dest: "{{ awx_receptor_dir }}/public_key/work_public_key.pem"
+    remote_src: true
+    mode: "0644"
+  notify: Restart receptor
+
+- name: Enable podman service
+  ansible.builtin.systemd:
+    name: podman
+    enabled: true
+
+- name: Enable receptor service
+  ansible.builtin.systemd:
+    name: receptor
+    enabled: true

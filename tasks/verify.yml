@@ -1,0 +1,19 @@
+---
+- name: Flush handlers to ensure receptor is restarted
+  ansible.builtin.meta: flush_handlers
+
+- name: Check receptor service status
+  ansible.builtin.systemd:
+    name: receptor
+  register: _awx_receptor_status
+
+- name: Fail if receptor service is not active
+  ansible.builtin.fail:
+    msg: "Receptor service is not active. Current state: {{ _awx_receptor_status.status.ActiveState }}"
+  when: _awx_receptor_status.status.ActiveState != "active"
+
+- name: Clean up temporary bundle directory
+  ansible.builtin.file:
+    path: "{{ awx_receptor_download_dir }}"
+    state: absent
+  when: awx_receptor_cleanup_bundle

@@ -1,0 +1,22 @@
+---
+extends: default
+
+ignore:
+  - .github/
+  - .venv/
+
+rules:
+  line-length:
+    max: 200
+    level: warning
+  truthy:
+    allowed-values:
+      - "true"
+      - "false"
+      - "yes"
+      - "no"
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 1
+  braces:
+    max-spaces-inside: 1

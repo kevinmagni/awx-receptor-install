@@ -1,0 +1,41 @@
+---
+- name: Download install bundle from AWX
+  ansible.builtin.uri:
+    url: "{{ _awx_receptor_api_url }}/instances/{{ awx_receptor_instance_hostname }}/install_bundle/"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ awx_receptor_api_token }}"
+    validate_certs: "{{ awx_receptor_validate_certs }}"
+    return_content: true
+  register: _awx_receptor_bundle
+
+- name: Ensure download directory exists
+  ansible.builtin.file:
+    path: "{{ awx_receptor_download_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Save install bundle
+  ansible.builtin.copy:
+    content: "{{ _awx_receptor_bundle.content }}"
+    dest: "{{ awx_receptor_download_dir }}/bundle.tar.gz"
+    mode: "0644"
+
+- name: Install receptor packages (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: "{{ _awx_receptor_packages_debian + awx_receptor_extra_packages }}"
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: Install receptor packages (RHEL/CentOS)
+  ansible.builtin.dnf:
+    name: "{{ _awx_receptor_packages_redhat + awx_receptor_extra_packages }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Extract install bundle
+  ansible.builtin.unarchive:
+    src: "{{ awx_receptor_download_dir }}/bundle.tar.gz"
+    dest: "{{ awx_receptor_download_dir }}"
+    remote_src: true

@@ -1,0 +1,30 @@
+---
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - awx_receptor_api_host | length > 0
+      - awx_receptor_api_token | length > 0
+      - awx_receptor_instance_hostname | length > 0
+      - awx_receptor_instance_group_name | length > 0
+    fail_msg: >-
+      Required variables are missing. Please set:
+      awx_receptor_api_host, awx_receptor_api_token,
+      awx_receptor_instance_hostname, awx_receptor_instance_group_name
+
+- name: Gather OS family facts
+  ansible.builtin.setup:
+    gather_subset:
+      - '!all'
+      - os_family
+
+- name: Register instance and group in AWX
+  ansible.builtin.include_tasks: awx_api.yml
+
+- name: Install receptor packages
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure receptor service
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Verify receptor service
+  ansible.builtin.include_tasks: verify.yml

@@ -1,0 +1,17 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Check receptor configuration directory exists
+      ansible.builtin.stat:
+        path: /etc/receptor
+      register: receptor_dir
+
+    - name: Assert receptor directory exists
+      ansible.builtin.assert:
+        that:
+          - receptor_dir.stat.exists
+          - receptor_dir.stat.isdir
+        fail_msg: "Receptor directory /etc/receptor does not exist"

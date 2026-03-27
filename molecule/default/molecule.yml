@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: receptor-ubuntu
+    image: geerlingguy/docker-ubuntu2204-ansible
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      receptor-ubuntu:
+        awx_receptor_api_host: "awx.example.com"
+        awx_receptor_api_token: "test-token"
+        awx_receptor_instance_hostname: "receptor-test-01"
+        awx_receptor_instance_group_name: "test-group"
+
+verifier:
+  name: ansible
