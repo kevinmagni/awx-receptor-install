@@ -9,9 +9,6 @@ on:
     branches:
       - main
 
-env:
-  UV_SYSTEM_PYTHON: 1
-
 jobs:
   lint:
     name: Lint
@@ -25,11 +22,14 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install Python
-        run: uv python install 3.12
+      - name: Install Python and create venv
+        run: |
+          uv python install 3.12
+          uv venv .venv --python 3.12
+          echo "${{ github.workspace }}/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Install dependencies
-        run: uv pip install ansible-core ansible-lint yamllint
+        run: uv pip install --python .venv ansible-core ansible-lint yamllint
 
       - name: Run yamllint
         run: yamllint .
@@ -55,11 +55,14 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install Python
-        run: uv python install 3.12
+      - name: Install Python and create venv
+        run: |
+          uv python install 3.12
+          uv venv .venv --python 3.12
+          echo "${{ github.workspace }}/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Install dependencies
-        run: uv pip install ansible-core molecule "molecule-plugins[docker]" docker
+        run: uv pip install --python .venv ansible-core molecule "molecule-plugins[docker]" docker
 
       - name: Run Molecule
         run: molecule test

@@ -6,9 +6,6 @@ on:
     tags:
       - "v*"
 
-env:
-  UV_SYSTEM_PYTHON: 1
-
 jobs:
   release:
     name: Publish to Galaxy
@@ -21,11 +18,14 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Install Python
-        run: uv python install 3.12
+      - name: Install Python and create venv
+        run: |
+          uv python install 3.12
+          uv venv .venv --python 3.12
+          echo "${{ github.workspace }}/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Install Ansible
-        run: uv pip install ansible-core
+        run: uv pip install --python .venv ansible-core
 
       - name: Import role to Ansible Galaxy
         run: >-
